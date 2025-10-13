@@ -36,7 +36,7 @@ $HOME/your_folder/
 ├── name.pdb # your input structure
 ```
 
-4 ##**Run (detached, with GPU)**<br>
+## 4 **Run (detached, with GPU)**<br>
 The user can change the script run.sh inside the container folder to select which options apply to the scanning
 In particular the modification to do are:
  - change the folder name 'your_folder' with the actual folder name in --bind "$HOME/your_folder:/data" and the pdb name file.pdb in flag --pdb /data/name.pdb 
