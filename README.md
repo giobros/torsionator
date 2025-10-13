@@ -4,6 +4,7 @@ Torsionator is an end‑to‑end pipeline for dihedral scans and torsion paramet
 
 
 <img width="9428" height="3573" alt="Picture" src="https://github.com/user-attachments/assets/90083681-c90d-4aa8-ac53-22760053b18e" />
+
 ## 2. **Instalaltion**
    
 **Requirements** <br>
@@ -26,30 +27,21 @@ cd container
 docker build -t ubuntu22_cuda11.2 .
 docker save -o cuda11.2.tar ubuntu22_cuda11.2
 apptainer build torsionator.sif docker-archive://./cuda11.2.tar
-``` 
+```
+
 ## 3 **Prepare your host work directory**
 Place your pdb input and script inside a host directory that you’ll bind to /data, e.g.:
 ```
 $HOME/your_folder/
-├── file.pdb # your input structure
+├── name.pdb # your input structure
 ```
+
 4 ##**Run (detached, with GPU)**
-The user can change the script run.sh to select which options apply to the scanning
-
+The user can change the script run.sh inside the container folder to select which options apply to the scanning
+In particular the modification to do are:
+ - change the folder name 'your_folder' with the actual folder name in --bind "$HOME/your_folder:/data" and the pdb name file.pdb in flag --pdb /data/name.pdb 
+ - change the scanning options:
 ```
-#!/bin/bash
-
-unset PYTHONPATH  # Prevent host leakage
-
-apptainer exec \
-  --nv \
-  --bind "$HOME/torsionator/torsionator:/torsionator" \
-  --bind "$HOME/your_folder:/data" \
-  --env PYTHONPATH=/ \
-  --env HOME=/root \
-  torsionator.sif \
-  python3.9 -m torsionator.cli \
-   --pdb /data/file.pdb \
    --method obi|mace|both \
    --dihedral all|[a,b,c,d]|print \
    --conf_analysis true|false \
@@ -69,18 +61,19 @@ You will find results under the following directories on the host inside your bo
 │   │   ├── min_energy.txt
 │   │   └── *.pdb / *.xyz (minimized conformers)
 │   └── MACE/ ... (same layout)
-└── scanning/
-    └── a_b_c_d/
-        ├── OBI/
-        │   ├── geometries.xyz
-        │   ├── angles_vs_energies.txt
-        │   ├── angles_vs_energies_final.txt   # sorted & min-shifted
-        │   ├── energies.dat                    # single-column, Hartree, min=0 (MDGX)
-        │   ├── scan_pdbs/*.pdb
-        │   ├── obi.dat                         # MDGX torsion fit
-        │   └── final_OBI.frcmod                # frcmod with updated DIHE lines
-        ├── MACE/ ... (same layout)
-        └── a_b_c_d.png                         # plotted profile (kcal/mol, min=0)
+├── scanning/
+│     └── a_b_c_d/
+│       ├── OBI/
+│       │   ├── geometries.xyz
+│       │   ├── angles_vs_energies.txt
+│       │   ├── angles_vs_energies_final.txt   # sorted & min-shifted
+│       │   ├── energies.dat                   # single-column, Hartree, min=0 
+│       │   ├── scan_pdbs/*.pdb
+│       │   └── obi.dat                        # MDGX torsion fit
+│       ├── MACE/ ... (same layout)
+│       └── a_b_c_d.png                        # plotted profile (kcal/mol)
+└── parameters/name_method_a_b_c_d.frcmod      # frcmod with updated DIHE lines
+
 
 ```
 
