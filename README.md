@@ -13,13 +13,13 @@ Torsionator is an end‑to‑end pipeline for dihedral scans and torsion paramet
 - NVIDIA GPU (optional) and host NVIDIA drivers; use --nv if you want GPU acceleration <br>
 - A 'your_name' folder on the host that will be bind‑mounted as '/data' inside the container <br>
 
-***Clone the repository**
+**Clone the repository**<br>
 First clone the repo and then move into the top-level directory of the package.<br>
 ```
 git clone https://github.com/giobros/torsionator.git
 ```
 
-**Build the image**
+**Build the image**<br>
 All the dependencies can be loaded together using the torsionator.sif generated with the Dockerfile and Apptainer.
 Enter the folder container and lunch the file .sh to create the image
 ```
@@ -29,14 +29,14 @@ docker save -o cuda11.2.tar ubuntu22_cuda11.2
 apptainer build torsionator.sif docker-archive://./cuda11.2.tar
 ```
 
-## 3 **Prepare your host work directory**
+## 3 **Prepare your host work directory**<br>
 Place your pdb input and script inside a host directory that you’ll bind to /data, e.g.:
 ```
 $HOME/your_folder/
 ├── name.pdb # your input structure
 ```
 
-4 ##**Run (detached, with GPU)**
+4 ##**Run (detached, with GPU)**<br>
 The user can change the script run.sh inside the container folder to select which options apply to the scanning
 In particular the modification to do are:
  - change the folder name 'your_folder' with the actual folder name in --bind "$HOME/your_folder:/data" and the pdb name file.pdb in flag --pdb /data/name.pdb 
@@ -48,7 +48,7 @@ In particular the modification to do are:
    --conf_scanning true|false
 ```
 
-## 5. **Where outputs are written**
+## 5. **Where outputs are written**<br>
 By default the script uses BASE_DIR = "/data"
 You will find results under the following directories on the host inside your bound folder:
 ```
