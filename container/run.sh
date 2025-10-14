@@ -10,7 +10,7 @@ apptainer exec \
   --env HOME=/root \
   torsionator.sif \
   python3.9 -m torsionator.cli \
-   --pdb /data/file.pdb \
+   --pdb /data/name.pdb \
    --method obi|mace|both \
    --dihedral all|[a,b,c,d]|print \
    --conf_analysis true|false \
