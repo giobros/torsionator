@@ -32,8 +32,8 @@ apptainer build torsionator.sif docker-archive://./cuda11.2.tar
 ## 3 **Prepare your host work directory**<br>
 Place your pdb input and script inside a host directory that you’ll bind to /data, e.g.:
 ```
-$HOME/your_folder/
-├── name.pdb # your input structure
+$HOME/<your_folder>/
+└── <name.pdb> # your input structure
 ```
 
 ## 4 **Run (detached, with GPU)**<br>
