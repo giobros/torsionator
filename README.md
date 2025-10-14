@@ -39,7 +39,7 @@ $HOME/your_folder/
 ## 4 **Run (detached, with GPU)**<br>
 The user can change the script run.sh inside the container folder to select which options apply to the scanning
 In particular the modification to do are:
- - change the folder name 'your_folder' with the actual folder name in --bind "$HOME/your_folder:/data" and the pdb name file.pdb in flag --pdb /data/name.pdb 
+ - change the folder name *your_folder* with the actual folder name in --bind "$HOME/<your_folder>:/data" and the pdb *name* in flag --pdb /data/<name>.pdb 
  - change the scanning options:
 ```
    --method obi|mace|both \
@@ -52,7 +52,7 @@ In particular the modification to do are:
 By default the script uses BASE_DIR = "/data"
 You will find results under the following directories on the host inside your bound folder:
 ```
-/data/
+/<your_folder>/
 ├── conformers/
 │   ├── OBI/
 │   │   ├── initial_energies.txt
@@ -72,7 +72,7 @@ You will find results under the following directories on the host inside your bo
 │       │   └── obi.dat                        # MDGX torsion fit
 │       ├── MACE/ ... (same layout)
 │       └── a_b_c_d.png                        # plotted profile (kcal/mol)
-└── parameters/name_method_a_b_c_d.frcmod      # frcmod with updated DIHE lines
+└── parameters/<name>_method_a_b_c_d.frcmod      # frcmod with updated DIHE lines
 
 
 ```
