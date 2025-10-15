@@ -5,7 +5,6 @@ import subprocess
 from dataclasses import dataclass
 
 
-# ---- config / helpers --------------------------------------------------------
 
 def _prepend_to_path(path: str):
     if path and os.path.isdir(path):
@@ -32,7 +31,6 @@ class AntechamberConfig:
     at_type: str = "gaff2"     # -at gaff2
 
 
-# ---- core workflow -----------------------------------------------------------
 
 def run_workflow(scan_dir: str, method: str, cfg: AntechamberConfig = AntechamberConfig()):
     """
@@ -73,7 +71,6 @@ def run_workflow(scan_dir: str, method: str, cfg: AntechamberConfig = Antechambe
     ]
     run_command(ac_cmd, cwd=ante_dir)
 
-    # if sqm.pdb was produced, re-run to ensure charges
     if os.path.isfile(os.path.join(ante_dir, "sqm.pdb")):
         ac2_cmd = [
             "antechamber",
