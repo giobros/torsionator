@@ -59,7 +59,7 @@ You will find results under the following directories on the host inside your bo
 │   │   ├── optimized_energies.txt
 │   │   ├── sorted_energies.txt
 │   │   ├── min_energy.txt
-│   │   └── *.pdb / *.xyz (minimized conformers)
+│   │   └── pdb/ xyz/ (minimized conformers)
 │   └── MACE/ ... (same layout)
 ├── scanning/
 │     └── a_b_c_d/
