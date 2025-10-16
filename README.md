@@ -2,8 +2,8 @@
 ## 1. **Overview** <br>
 Torsionator is an end‑to‑end pipeline for dihedral scans and torsion parameter fitting. It minimizes an input PDB using ML force fields (OBI/MACE), screens for steric clashes, optionally explores RDKit conformers, performs constrained scans, and fits torsional terms with AMBERTools' progam mdgx, finally writing an updated frcmod.
 
+<img width="9373" height="3546" alt="Picture" src="https://github.com/user-attachments/assets/8504e6f5-89b3-47a5-aaf7-bde793e05e3f" />
 
-<img width="9428" height="3573" alt="Picture" src="https://github.com/user-attachments/assets/90083681-c90d-4aa8-ac53-22760053b18e" />
 
 ## 2. **Instalaltion**
    
