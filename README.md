@@ -43,7 +43,7 @@ In particular the modification to do are:
  - change the scanning options:
 ```
    --method obi|mace|both \
-   --dihedral all|[a,b,c,d]|print \
+   --dihedral all|[a,b,c,d]|"print" \
    --conf_analysis true|false \
    --force_scanning true|false
 ```
