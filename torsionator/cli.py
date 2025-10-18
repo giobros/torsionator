@@ -11,7 +11,7 @@ def main():
     p.add_argument("--conf_analysis", choices=["true","false"], default="true",
                      help = "false → scan everything anyway (clashes ignored), " \
                      "true → generate conformers and check for lower energy clash-free one")
-    p.add_argument("--force_scan", choices=["true","false"], default="true",
+    p.add_argument("--force_scanning", choices=["true","false"], default="true",
                     help = "if no clash-free conformer is found" \
                     " false → stop the workflow, " \
                      "true → uses best-conformer for scanning (lower LJ)")
@@ -19,7 +19,7 @@ def main():
 
     cfg = Config(base_dir="/data")
     wf = Workflow(cfg)
-    wf.run(args.pdb, args.method, args.dihedral, args.conf_analysis, args.force_scan)
+    wf.run(args.pdb, args.method, args.dihedral, args.conf_analysis, args.force_scanning)
 
 if __name__ == "__main__":
     main()
