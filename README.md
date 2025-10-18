@@ -45,8 +45,9 @@ In particular the modification to do are:
    --method obi|mace|both \
    --dihedral all|[a,b,c,d]|print \
    --conf_analysis true|false \
-   --conf_scanning true|false
+   --force_scanning true|false
 ```
+Suggest: print the dihedrals before passing the wanted one, the code should recognize your input but my suggestion is to check the code-preferred dihedral definition.
 
 ## 5. **Where outputs are written**<br>
 By default the script uses BASE_DIR = "/data"
