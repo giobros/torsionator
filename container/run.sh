@@ -14,4 +14,4 @@ apptainer exec \
    --method obi|mace|both \      
    --dihedral all|[a,b,c,d]|print \
    --conf_analysis true|false \
-   --conf_scanning true|false
+   --force_scan true|false
