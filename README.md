@@ -23,7 +23,7 @@ git clone https://github.com/giobros/torsionator.git
 All the dependencies can be loaded together using the torsionator.sif generated with the Dockerfile and Apptainer.
 Enter the folder container and lunch the file .sh to create the image
 ```
-cd container
+cd torsionator/container
 docker build -t ubuntu22_cuda11.2 .
 docker save -o cuda11.2.tar ubuntu22_cuda11.2
 apptainer build torsionator.sif docker-archive://./cuda11.2.tar
