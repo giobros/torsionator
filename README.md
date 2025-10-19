@@ -33,13 +33,13 @@ apptainer build torsionator.sif docker-archive://./cuda11.2.tar
 Place your pdb input and script inside a host directory that you’ll bind to /data, e.g.:
 ```
 $HOME/<your_folder>/
-└── <name>.pdb # your input structure
+└── <ROOT>.pdb # your input structure
 ```
 
 ## 4 **Run (detached, with GPU)**<br>
 The user can change the script run.sh inside the container folder to select which options apply to the scanning
 In particular the modification to do are:
- - change the folder name *your_folder* with the actual folder name in --bind "$HOME/<your_folder>:/data" and the pdb *name* in flag --pdb /data/<name>.pdb 
+ - change the folder name *your_folder* with the actual folder name in --bind "$HOME/<your_folder>:/data" and the pdb *ROOT* in flag --pdb /data/<ROOT>.pdb 
  - change the scanning options:
 ```
    --method obi|mace|both \
@@ -73,7 +73,7 @@ You will find results under the following directories on the host inside your bo
 │       │   └── obi.dat                        # MDGX torsion fit
 │       ├── MACE/ ... (same layout)
 │       └── a_b_c_d.png                        # plotted profile (kcal/mol)
-└── parameters/<name>_method_a_b_c_d.frcmod    # frcmod with updated DIHE lines
+└── parameters/<ROOT>_<method>_a_b_c_d.frcmod    # frcmod with updated DIHE lines
 
 
 ```
