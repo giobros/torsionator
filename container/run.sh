@@ -10,7 +10,7 @@ apptainer exec \
   --env HOME=/root \
   torsionator.sif \
   python3.9 -m torsionator.cli \
-   --pdb /data/<name>.pdb \   ## MODIFY <name> WITH YOU ACTUAL FOLDER NAME
+   --pdb /data/<ROOT>.pdb \   ## MODIFY <ROOT> WITH YOU ACTUAL PDB NAME
    --method obi|mace|both \      
    --dihedral all|[a,b,c,d]|"print" \   # INDICES 0-BASED
    --conf_analysis true|false \
