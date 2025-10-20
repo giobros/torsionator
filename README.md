@@ -24,9 +24,9 @@ All the dependencies can be loaded together using the torsionator.sif generated 
 Enter the folder container and lunch the file .sh to create the image
 ```
 cd torsionator/container
-docker build -t ubuntu22_cuda11.2 .
-docker save -o cuda11.2.tar ubuntu22_cuda11.2
-apptainer build torsionator.sif docker-archive://./cuda11.2.tar
+docker build -t torsionator .
+docker save -o torsionator.tar torsionator
+apptainer build torsionator.sif docker-archive://./torsionator.tar
 ```
 
 ## 3 **Prepare your host work directory**<br>
