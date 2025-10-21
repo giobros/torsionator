@@ -30,7 +30,7 @@ apptainer build --fakeroot torsionator.sif torsionator.def
 ## 3 **Prepare your host work directory**<br>
 Place your pdb input and script inside a host directory that you’ll bind to /data, e.g.:
 ```
-$HOME/<your_folder>/
+/<path_to_your_folder>/
 └── <ROOT>.pdb # your input structure
 ```
 
@@ -51,7 +51,7 @@ Suggest: print the dihedrals before passing the wanted one, the code should reco
 By default the script uses BASE_DIR = "/data"
 You will find results under the following directories on the host inside your bound folder:
 ```
-/<your_folder>/
+/<path_to_your_folder>/
 ├── conformers/
 │   ├── pdb/*.pdb 
 │   ├── OBI/
