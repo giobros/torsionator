@@ -52,12 +52,14 @@ You will find results under the following directories on the host inside your bo
 ```
 /<your_folder>/
 ├── conformers/
+│   ├── pdb/*.pdb 
 │   ├── OBI/
 │   │   ├── initial_energies.txt
 │   │   ├── optimized_energies.txt
 │   │   ├── sorted_energies.txt
 │   │   ├── min_energy.txt
-│   │   └── pdb/ xyz/ (minimized conformers)
+│   │   ├── xyz/
+│   │   └── *.pdb  
 │   └── MACE/ ... (same layout)
 ├── scanning/
 │     └── a_b_c_d/
