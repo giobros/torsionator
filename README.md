@@ -73,7 +73,7 @@ You will find results under the following directories on the host inside your bo
 │       │   └── obi.dat                        # MDGX torsion fit
 │       ├── MACE/ ... (same layout)
 │       └── a_b_c_d.png                        # plotted profile (kcal/mol)
-└── parameters/<ROOT>_<method>_a_b_c_d.frcmod    # frcmod with updated DIHE lines
+└── parameters/<ROOT>_<method>_a_b_c_d.frcmod  # frcmod with updated DIHE lines
 
 
 ```
