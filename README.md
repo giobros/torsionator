@@ -45,7 +45,7 @@ In particular the modification to do are:
    --conf_analysis true|false \
    --force_scanning true|false
 ```
-Suggest: print the dihedrals before passing the wanted one, the code should recognize your input but my suggestion is to check the code-preferred dihedral definition.
+Suggestion: print the dihedrals before passing the wanted one, the code should recognize your input but my suggestion is to check the code-preferred dihedral definition.
 
 ## 5. **Where outputs are written**<br>
 By default the script uses BASE_DIR = "/data"
