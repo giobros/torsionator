@@ -40,7 +40,7 @@ In particular the modification to do are:
  - change the folder name *your_folder* with the actual folder name in --bind "$HOME/<your_folder>:/data" and the pdb *ROOT* in flag --pdb /data/<ROOT>.pdb 
  - change the scanning options:
 ```
-   --method obi|mace|all\
+   --method obi|mace|all \
    --dihedral all|[a,b,c,d]|"print" \
    --conf_analysis true|false \
    --force_scanning true|false
