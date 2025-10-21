@@ -9,7 +9,6 @@ Torsionator is an end‑to‑end pipeline for dihedral scans and torsion paramet
    
 **Requirements** <br>
 - Apptainer ≥ 1.x installed on the host<br>
-  (Docker if installation starts from the Dockerfile)<br>
 - NVIDIA GPU (optional) and host NVIDIA drivers; use --nv if you want GPU acceleration <br>
 - A 'your_name' folder on the host that will be bind‑mounted as '/data' inside the container <br>
 
@@ -20,13 +19,11 @@ git clone https://github.com/giobros/torsionator.git
 ```
 
 **Build the image**<br>
-All the dependencies can be loaded together using the torsionator.sif generated with the Dockerfile and Apptainer.
+All the dependencies can be loaded together using the torsionator.sif generated with the .def file and Apptainer.
 Enter the folder container and lunch the file .sh to create the image
 ```
 cd torsionator/container
-docker build -t torsionator .
-docker save -o torsionator.tar torsionator
-apptainer build torsionator.sif docker-archive://./torsionator.tar
+apptainer build --fakeroot torsionator.sif torsionator.def
 ```
 
 ## 3 **Prepare your host work directory**<br>
