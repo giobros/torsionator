@@ -11,7 +11,7 @@ apptainer exec \
   torsionator.sif \
   python3.9 -m torsionator.cli \
    --pdb /data/<ROOT>.pdb \   ## MODIFY <ROOT> WITH YOU ACTUAL PDB NAME
-   --method obi|mace|both \      
+   --method obi|mace|all \      
    --dihedral all|[a,b,c,d]|"print" \   # INDICES 0-BASED
    --conf_analysis true|false \
    --force_scanning true|false
