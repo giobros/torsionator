@@ -333,7 +333,6 @@ class Workflow:
             for m in methods:
                 atoms_min = read(minimized[m])
                 gA, gD = splitter.split_by_dihedral(atoms_min, d_tup, method="neighbors")
-                self.log.info("splitting %s %s", gA, gD)
                 res = self.clash.scan_check(atoms_min, d_tup, gA, gD)
                 self.log.info("[%s][%s] clash: %s", m, d_tup, "NO" if res.no_clash else "YES")
                 if not res.no_clash:
