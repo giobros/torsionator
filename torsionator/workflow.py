@@ -332,7 +332,6 @@ class Workflow:
             # Check clashes across methods; if any method clashes, mark as clash
             for m in methods:
                 atoms_min = read(minimized[m])
-                print(atoms_min)
                 gA, gD = splitter.split_by_dihedral(atoms_min, d_tup, method="neighbors")
                 self.log.info("splitting %s %s", gA, gD)
                 res = self.clash.scan_check(atoms_min, d_tup, gA, gD)
