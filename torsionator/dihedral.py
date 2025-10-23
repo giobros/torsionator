@@ -22,8 +22,6 @@ class GraphSplitter:
     i.e., relative to the central bond B–C.
     """
 
-    # ---------- Low-level helpers (ASE-only adjacency + BFS) ----------
-
     @staticmethod
 
     def split_two_groups(atoms, A, B, C, D, *, scale=1.10, pad=0.20, exclude_dihedral=False):
@@ -41,9 +39,8 @@ class GraphSplitter:
         N = len(atoms)
         pos = atoms.get_positions()
         Z   = atoms.get_atomic_numbers()
-        rc  = [covalent_radii[z] if z < len(covalent_radii) else 0.77 for z in Z]  # 0.77~C as fallback
+        rc  = [covalent_radii[z] if z < len(covalent_radii) else 0.77 for z in Z]  
 
-        # --- 1) Ricostruisci i legami con criterio covalente ---
         adj = [set() for _ in range(N)]
         for i in range(N):
             ri = rc[i]
@@ -52,20 +49,16 @@ class GraphSplitter:
                 rj = rc[j]
                 cutoff = scale * (ri + rj) + pad
                 d = np.linalg.norm(pi - pos[j])
-                # evita legami “zero” e collega se coerente con la somma dei rc
                 if d > 0.25 and d <= cutoff:
                     adj[i].add(j); adj[j].add(i)
 
-        # --- 2) Taglia B–C ---
         adj[B].discard(C); adj[C].discard(B)
 
-        # --- 3) Seeds: primi vicini di B/C (fallback A/D) ---
         seedsB = list(adj[B]) or [A]
         seedsC = list(adj[C]) or [D]
 
-        # --- 4) BFS a due fronti: “assegna se non ancora visitato” ---
-        label = [-1] * N          # -1=unseen, 0=B-side (group_A), 1=C-side (group_D)
-        dist  = [10**9] * N       # per eventuali tie/fallback
+        label = [-1] * N       
+        dist  = [10**9] * N       
 
         q = deque()
         for s in seedsB:
@@ -79,14 +72,11 @@ class GraphSplitter:
             u = q.popleft()
             lu = label[u]
             for v in adj[u]:
-                if label[v] == -1:              # “vicino non ancora visitato”
+                if label[v] == -1:             
                     label[v] = lu
                     dist[v] = dist[u] + 1
                     q.append(v)
-                # se già visitato, NON lo rietichettiamo: “first arrival wins”
-
-        # --- 5) Residui (grafo spezzato): assegna per distanza ai centri ---
-        # BFS dai centri B e C sul grafo già senza B–C
+                
         def bfs_single(src):
             d = {src: 0}; qq = deque([src])
             while qq:
@@ -112,12 +102,11 @@ class GraphSplitter:
             group_A = [i for i in group_A if i not in dihed] or [A]
             group_D = [i for i in group_D if i not in dihed] or [D]
 
-        # sanity
+        
         assert not (set(group_A) & set(group_D))
         assert set(group_A) | set(group_D) == set(range(N))
         return group_A, group_D
     
-    # ---------- Public API ----------
 
     def split_by_dihedral(self, atoms, dihedral, method: str = "neighbors",
                           *, exclude_dihedral: bool = False,
@@ -164,7 +153,6 @@ class GraphSplitter:
             group_A = [i for i in group_A if i not in dihed] or [A]
             group_D = [i for i in group_D if i not in dihed] or [D]
 
-        # final guarantees
         assert not (set(group_A) & set(group_D)), "Unexpected overlap between groups"
         assert set(group_A) | set(group_D) == set(range(len(atoms))), "Not all atoms were assigned"
         return group_A, group_D
