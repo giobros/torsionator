@@ -1,0 +1,95 @@
+Bootstrap: docker
+From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
+
+%labels
+    Maintainer "you"
+    Purpose "OBIWAN + CUDA 11.8 (devel) with conda/mamba, ambertools, openbabel, TF 2.14, Torch cu118"
+
+%environment
+    # Runtime env (available when you exec/run the SIF)
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda-11.8/lib64:$LD_LIBRARY_PATH
+    export OBI_ROOT=/app/OBIWAN
+    export OBIWAN_MODEL_PATH=${OBI_ROOT}/results/models
+    export PATH=/opt/conda/envs/obiwan_env/bin:/opt/conda/bin:$PATH
+    export CONDA_DEFAULT_ENV=obiwan_env
+    export DEBIAN_FRONTEND=noninteractive
+
+%files
+    # Make sure obi.py is in the same directory as this .def before building
+    obi.py /opt/obi_custom/obi.py
+
+%post -c /bin/bash
+    # Use bash (not /bin/sh) so pipefail works; define vars here (env vars
+    # in %environment are NOT visible during build)
+    set -euxo pipefail
+    export DEBIAN_FRONTEND=noninteractive
+    export OBI_ROOT=/app/OBIWAN
+    export OBIWAN_MODEL_PATH="${OBI_ROOT}/results/models"
+    export PATH=/opt/conda/envs/obiwan_env/bin:/opt/conda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda-11.8/lib64:${LD_LIBRARY_PATH:-}
+
+    # 1) System deps
+    apt-get update
+    apt-get install -y --no-install-recommends wget curl git build-essential ca-certificates
+    rm -rf /var/lib/apt/lists/*
+
+    # 2) Miniconda + Mamba
+    wget -O /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash /tmp/miniconda.sh -b -p /opt/conda
+    rm /tmp/miniconda.sh
+    /opt/conda/bin/conda config --system --remove channels defaults || true
+    /opt/conda/bin/conda config --system --add channels conda-forge
+    /opt/conda/bin/conda install -y -n base mamba
+
+    # 3) Create env (python + ambertools + openbabel) — matches your intent
+    /opt/conda/bin/mamba create -y -n obiwan_env -c conda-forge \
+        python=3.9 ambertools=22 openbabel=3.1.*
+
+    # 4) Packages: keep your list; install tricky ones via conda-forge
+    /opt/conda/bin/mamba install -y -n obiwan_env -c conda-forge rdkit=2023.03.3 ase
+    /opt/conda/bin/mamba run -n obiwan_env pip install --no-cache-dir \
+        tensorflow==2.14 \
+        numpy==1.23.5 \
+        Pillow \
+        matplotlib \
+        scipy \
+        pandas==2.0.3 \
+        tqdm \
+        joblib \
+        networkx
+
+    # PyTorch for CUDA 11.8 (pin series to avoid accidental wheel bumps)
+    /opt/conda/bin/mamba run -n obiwan_env pip install --no-cache-dir \
+        torch==2.4.* torchvision==0.19.* torchaudio==2.4.* \
+        --index-url https://download.pytorch.org/whl/cu118
+
+    # Extra package
+    /opt/conda/bin/mamba run -n obiwan_env pip install --no-cache-dir mace-torch
+
+    # 5) OBIWAN sources
+    git clone https://github.com/virtualmartire/OBIWAN.git "${OBI_ROOT}"
+
+    # 6) Custom ASE calculator
+    mkdir -p /opt/conda/envs/obiwan_env/lib/python3.9/site-packages/ase/calculators
+    cp -f /opt/obi_custom/obi.py /opt/conda/envs/obiwan_env/lib/python3.9/site-packages/ase/calculators/obi.py
+
+    # 7) Workspace + cleanup
+    mkdir -p /workspace
+    /opt/conda/bin/conda clean -afy || true
+
+%runscript
+    # Default entrypoint: run whatever you pass, from /workspace, with env active
+    export PATH=/opt/conda/envs/obiwan_env/bin:/opt/conda/bin:$PATH
+    cd /workspace
+    exec "$@"
+
+%help
+    Build:
+      apptainer build --fakeroot obiwan.sif OBIWAN.def   # or: sudo apptainer build ...
+
+    GPU test:
+      apptainer exec --nv obiwan.sif nvidia-smi
+
+    Python checks:
+      apptainer exec --nv obiwan.sif python -c "import torch; print('torch', torch.__version__, 'cuda?', torch.cuda.is_available())"
+      apptainer exec --nv obiwan.sif python -c "import tensorflow as tf; print('tf', tf.__version__)"
