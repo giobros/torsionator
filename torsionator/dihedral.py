@@ -367,7 +367,6 @@ def plot_shifted_energy_profiles(base_dir: str, dihedral):
         plt.ylabel("Relative Energy (kcal/mol)")
         plt.title(f"Dihedral Scan Energy Profile: {dih_str}")
         plt.legend()
-        plt.xlim(0, 180)
         plt.grid(True)
         plt.tight_layout()
         out_png = os.path.join(base, f"{dih_str}.png")
