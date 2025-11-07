@@ -308,7 +308,7 @@ class DihedralScanner:
 
             a = stepper.optimize_with_dihedral(a, dihedral_indices, angle)
 
-            e_eh = energy_eh(a)  # store in Hartree (Eh), consistent with original script
+            e_eh = energy_eh(a) 
             tangle = a.get_dihedral(*dihedral_indices)
 
             energies.append(e_eh)
