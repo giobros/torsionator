@@ -94,7 +94,7 @@ If MCS = true:
 │       │       ├── geometries.xyz
 │       │       ├── energies.dat
 │       │       └── method.dat
-│       └── a_b_c_d.png                        # plotted profile (kcal/mol)
+│       └── a_b_c_d_MCS.png                        # plotted profile (kcal/mol)
 └── parameters/<ROOT>_<method>.frcmod  # frcmod with updated DIHE lines
 
 
