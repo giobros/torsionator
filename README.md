@@ -43,7 +43,7 @@ The modification needed are:
  - change the scanning options:
 ```
    --method all|mace|obi \
-   --dihedral all|[a,b,c,d]|"print" \
+   --dihedral all|[a,b,c,d]|print \
    --conf_analysis true|false \
    --BCS true|false \
    --MCS true|false \
