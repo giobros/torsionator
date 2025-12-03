@@ -45,7 +45,10 @@ In particular the modification to do are:
    --method obi|mace|all \
    --dihedral all|[a,b,c,d]|"print" \
    --conf_analysis true|false \
-   --force_scanning true|false
+   --BCS true|false \
+   --MCS true|false \
+   --N \
+   --RMSD \
 ```
 Suggestion: print the dihedrals before passing the wanted one, the code should recognize your input but my suggestion is to check the code-preferred dihedral definition.
 
