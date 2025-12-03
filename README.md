@@ -75,11 +75,30 @@ You will find results under the following directories on the host inside your bo
 │       │   └── obi.dat                        # MDGX torsion fit
 │       ├── MACE/ ... (same layout)
 │       └── a_b_c_d.png                        # plotted profile (kcal/mol)
-└── parameters/<ROOT>_<method>_a_b_c_d.frcmod  # frcmod with updated DIHE lines
+└── parameters/<ROOT>_<method>.frcmod  # frcmod with updated DIHE lines
 
 
 ```
+If MCS = true:
+```
+/<your_folder>/
+├── conformers/
+│   ├── pdb/*.pdb 
+│   └──  method/      
+│        └── N folders/minimized.pdb  
+├── scanning/
+│     └── a_b_c_d/
+│       ├── method/                     # MDGX torsion fit
+│       │   └──  MCS/
+│       │       ├── angles_vs_energies_final.txt   # sorted & min-shifted
+│       │       ├── geometries.xyz
+│       │       ├── energies.dat
+│       │       └── method.dat
+│       └── a_b_c_d.png                        # plotted profile (kcal/mol)
+└── parameters/<ROOT>_<method>.frcmod  # frcmod with updated DIHE lines
 
+
+```
 The workflow togheter with the rrors that stop it (e.g., clashes without --conf_scanning true) are written to:
 ```
 /data/workflow.log
