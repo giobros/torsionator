@@ -14,4 +14,9 @@ apptainer exec \
    --method obi|mace|all \      
    --dihedral all|[a,b,c,d]|"print" \   # INDICES 0-BASED
    --conf_analysis true|false \
-   --force_scanning true|false
+   --BCS true|false # Best-Conformer-Scan
+   --MCS true|false # Multi-Conformer-Scan
+   --N # N. of conformers to generate
+   --RMSD # RMSD pruning threshold
+
+
