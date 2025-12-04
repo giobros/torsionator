@@ -11,7 +11,7 @@ Torsionator is an end‑to‑end pipeline for dihedral scans and torsion paramet
 ## 2. **Instalaltion**
    
 **Requirements** <br>
-- Apptainer ≥ 1.x installed on the host<br>
+- Apptainer ≥ 1.x installed <br>
 - NVIDIA GPU (optional) and host NVIDIA drivers; use --nv if you want GPU acceleration <br>
 - <your_folder> on the host that will be bind‑mounted as '/data' inside the container <br>
 
