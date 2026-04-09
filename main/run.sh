@@ -15,6 +15,7 @@ RMSD=0.5                         # RMSD pruning threshold
 MULTIPLICITY=6                   # max expantion multiplicity (0 to keep the GAFF2 original one)
 STEP_SIZE=10                     # scan steps (5,10,15,20)
 DOUBLE_ROTATION="true"           # "true" | "false" | "none", false" →  just clockwise (cw), "true" →  both clockwise (cw) counterclockwise (ccw) scan when MCS=true; "
+NET_CHARGE="0"                   # net molecule charge, (default 0, other charges are not accepted by mace and obi) 
 # ------------------------------------------------
 
 # Resolve the torsionator package root (one level up from this script's directory)
