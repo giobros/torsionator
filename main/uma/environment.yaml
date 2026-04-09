@@ -1,0 +1,25 @@
+name: torsionator_uma
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - python=3.11
+  - ambertools=23
+  # numpy pinned <2: RDKit, ambertools, torch_geometric, fairchem deps all need numpy 1.x
+  - numpy>=1.24,<2
+  - scipy
+  - pandas>=2.0,<2.2
+  - rdkit
+  - matplotlib
+  - tqdm
+  - setuptools
+  - pip
+  - pip:
+    - torch --index-url https://download.pytorch.org/whl/cu118
+    - torchvision --index-url https://download.pytorch.org/whl/cu118
+    - torchaudio --index-url https://download.pytorch.org/whl/cu118
+    - fairchem-core>=2.0.0
+    - torch_geometric
+    # pin numpy <2: pandas binary incompatibility with numpy 2.x
+    - numpy<2
