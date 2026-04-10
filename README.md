@@ -1,4 +1,3 @@
-<img width="2227" height="1856" alt="papero" src="https://github.com/user-attachments/assets/a5b8ab19-13fc-400d-a98a-80d6539d4581" /># torsionator_plus
 <p align="center">
 <img width="400" height="400" alt="logo" src="https://github.com/user-attachments/assets/40132121-0ba2-44f2-8177-a5e1b68d2f5b" />
 </p>
