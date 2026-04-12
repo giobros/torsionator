@@ -9,7 +9,6 @@ Torsionator is an end‑to‑end pipeline for dihedral scans and torsion paramet
 
 <img width="8285" height="6592" alt="Picture3" src="https://github.com/user-attachments/assets/7734fe5e-1f9a-47c3-bf53-834229a712e2" />
 
-<img width="8285" height="6592"  alt="papero" src="https://github.com/user-attachments/assets/aa15a552-6d3e-485b-bf23-192146a3758a" />
 
 ## 2. **Instalaltion**
 
@@ -51,7 +50,7 @@ To change the scanning options modify:
 
 PDB_FILE_NAME_ROOT="NAME"        # CHANGE THIS! file NAME of your PDB file, without .pdb
 PDB_FILE_DIR="your_folder_path"  # CHANGE THIS! folder (full path) that contains $PDB_FILE_NAME_ROOT.pdb
-METHOD="all"                     # "all" | "mace" | "obi", NN calculator to use (default: obi)
+METHOD="obi"                     # "all" | "mace" | "obi", NN calculator to use (default: obi)
 DIHEDRAL="all"                   # "all" | "[a,b,c,d]" | "print" (0-based indices): "all" to scan all rotatable bonds; "print" to list them; "[a,b,c,d]" for a specific one.
 CONF_ANALYSIS="false"            # "true" | "false" | "none", "false" → scan minimized input even if clashes exist; "true"  → generate conformers and use a clash-free starting geometry
 BCS="false"                      # "true" | "false" | "none", "false" → abort; "true" → use the conformer with lowest LJ energy.
@@ -61,8 +60,8 @@ RMSD=0.5                         # RMSD pruning threshold
 MULTIPLICITY=6                   # max expantion multiplicity (0 to keep the GAFF2 original one)
 STEP_SIZE=10                     # scan steps (5,10,15,20)
 DOUBLE_ROTATION="true"           # "true" | "false" | "none", false" →  just clockwise (cw), "true" →  both clockwise (cw) counterclockwise (ccw) scan when MCS=true; "
-NET_CHARGE="0"                   # net molecule charge, (default 0, other charges are not accepted by mace and obi)
-SPIN="1"                         # molecule spin (2S+1) (default 1; other spin are not accepted by mace and obi)
+NET_CHARGE="0"                   # net molecule charge, (default 0, other charges raise warning with mace and obi)
+SPIN="1"                         # molecule spin (2S+1) (default 1; other spins raise warning with mace and obi)
 # ------------------------------------------------
 ```
 
