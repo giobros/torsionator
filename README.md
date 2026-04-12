@@ -7,6 +7,8 @@
 ## 1. **Overview** <br>
 Torsionator is an end‑to‑end pipeline for dihedral scans and torsion parameter fitting. It minimizes an input PDB using ML force fields (OBI/MACE/UMA), screens for steric clashes, optionally explores RDKit conformers, performs constrained scans, and fits torsional terms with AMBERTools' progam mdgx, finally writing an updated frcmod.<br>
 
+<img width="8285" height="6592" alt="Picture3" src="https://github.com/user-attachments/assets/7734fe5e-1f9a-47c3-bf53-834229a712e2" />
+
 <img width="8285" height="6592"  alt="papero" src="https://github.com/user-attachments/assets/aa15a552-6d3e-485b-bf23-192146a3758a" />
 
 ## 2. **Instalaltion**
@@ -59,7 +61,8 @@ RMSD=0.5                         # RMSD pruning threshold
 MULTIPLICITY=6                   # max expantion multiplicity (0 to keep the GAFF2 original one)
 STEP_SIZE=10                     # scan steps (5,10,15,20)
 DOUBLE_ROTATION="true"           # "true" | "false" | "none", false" →  just clockwise (cw), "true" →  both clockwise (cw) counterclockwise (ccw) scan when MCS=true; "
-NET_CHARGE="0"                   # net molecule charge, (default 0, other charges are not accepted by mace and obi) 
+NET_CHARGE="0"                   # net molecule charge, (default 0, other charges are not accepted by mace and obi)
+SPIN="1"                         # molecule spin (2S+1) (default 1; other spin are not accepted by mace and obi)
 # ------------------------------------------------
 ```
 
