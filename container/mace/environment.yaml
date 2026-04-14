@@ -1,0 +1,35 @@
+name: torsionator_mace
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.9.23
+  - ambertools=22
+  - openbabel
+  - rdkit=2023.03.3
+  - ase=3.23.0
+  - pip
+  - pip:
+    # PyTorch 2.4.1 + CUDA 11.8
+    - --extra-index-url https://download.pytorch.org/whl/cu118
+    - torch==2.4.1+cu118
+    - torchvision==0.19.1+cu118
+    - torchaudio==2.4.1+cu118
+    # scientific stack
+    - matplotlib==3.9.4
+    - scipy==1.13.1
+    - pandas==2.0.3
+    - h5py==3.11.0
+    - tqdm==4.67.1
+    - joblib==1.5.1
+    - networkx==3.2.1
+    - Pillow==10.4.0
+    # MACE + equivariant NN
+    - mace-torch==0.3.14
+    - e3nn==0.4.4
+    - torch-ema==0.3
+    - torchmetrics==1.8.2
+    # Torsionator extras
+    - ParmEd==4.0.0
+    # numpy 1.26.4: force back to 1.x (mace-torch pulls numpy 2.x)
+    - numpy==1.26.4

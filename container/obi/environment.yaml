@@ -1,0 +1,26 @@
+name: torsionator_obi
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.9.23
+  - ambertools=22
+  - openbabel
+  - rdkit=2023.03.3
+  - ase=3.23.0
+  - pip
+  - pip:
+    # TensorFlow 2.14 (required by OBI-WAN)
+    - tensorflow==2.14.0
+    # numpy 1.23.5: required by TF 2.14 (numpy 1.24+ breaks TF 2.14 internals)
+    - numpy==1.23.5
+    - Pillow==10.4.0
+    - matplotlib==3.9.4
+    - scipy==1.13.1
+    - pandas==2.0.3
+    - h5py==3.11.0
+    - tqdm==4.67.1
+    - joblib==1.5.1
+    - networkx==3.2.1
+    # Torsionator extras
+    - ParmEd==4.0.0

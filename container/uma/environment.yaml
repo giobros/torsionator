@@ -1,0 +1,29 @@
+name: torsionator_uma
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - ambertools=23
+  # numpy pinned <2: fairchem, torch_geometric, RDKit all require numpy 1.x
+  - numpy>=1.24,<2
+  - scipy
+  - pandas>=2.0,<2.2
+  - rdkit
+  - openbabel
+  - matplotlib
+  - tqdm
+  - setuptools
+  - pip
+  - pip:
+    # PyTorch + CUDA 11.8
+    - torch --index-url https://download.pytorch.org/whl/cu118
+    - torchvision --index-url https://download.pytorch.org/whl/cu118
+    - torchaudio --index-url https://download.pytorch.org/whl/cu118
+    # UMA / fairchem stack
+    - fairchem-core>=2.0.0
+    - torch_geometric
+    # Torsionator extras
+    - ParmEd==4.0.0
+    # enforce numpy <2 after pip deps
+    - numpy<2
