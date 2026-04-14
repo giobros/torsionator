@@ -1,0 +1,47 @@
+============================================================
+  WORKFLOW START for fragment
+============================================================
+============================================================
+  RUNNING MCS WORKFLOW
+============================================================
+============================================================
+  STEP 1: generate & minimize (all conformers)
+============================================================
+CUDA version: 11.8, CUDA device: 0
+[mace][1] minimizing -> conformers/mace/1/minimized.pdb
+CUDA version: 11.8, CUDA device: 0
+[mace][2] minimizing -> conformers/mace/2/minimized.pdb
+CUDA version: 11.8, CUDA device: 0
+[mace][3] minimizing -> conformers/mace/3/minimized.pdb
+[mace] MCS: 3 conformers prepared
+============================================================
+  STEP 2: Dihedral scan (all conformers)
+============================================================
+CUDA version: 11.8, CUDA device: 0
+[mace] scanning 3 conformers
+[mace][(0, 1, 2, 3)] SCAN (mace/1) input=/data/conformers/mace/1/minimized.pdb
+[mace][(0, 1, 2, 3)] SCAN done in 180.32 s
+[mace][(0, 1, 2, 3)] SCAN (ccw) (mace/1_ccw) input=/data/conformers/mace/1/minimized.pdb
+[mace][(0, 1, 2, 3)] SCAN (ccw) done in 181.65 s
+[mace][(0, 1, 2, 3)] SCAN (mace/2) input=/data/conformers/mace/2/minimized.pdb
+[mace][(0, 1, 2, 3)] SCAN done in 183.61 s
+[mace][(0, 1, 2, 3)] SCAN (ccw) (mace/2_ccw) input=/data/conformers/mace/2/minimized.pdb
+[mace][(0, 1, 2, 3)] SCAN (ccw) done in 182.18 s
+[mace][(0, 1, 2, 3)] SCAN (mace/3) input=/data/conformers/mace/3/minimized.pdb
+[mace][(0, 1, 2, 3)] SCAN done in 182.35 s
+[mace][(0, 1, 2, 3)] SCAN (ccw) (mace/3_ccw) input=/data/conformers/mace/3/minimized.pdb
+[mace][(0, 1, 2, 3)] SCAN (ccw) done in 183.35 s
+============================================================
+  STEP 3: Merge MCS scans
+============================================================
+[GAFF2/old][mace][(0, 1, 2, 3)] refinement (MCS=True, step_size=15)
+[PARAM] start mace (0, 1, 2, 3) (MCS=True expand_basis=True)
+[FIND-DIHE] dihedral='ca-ca-os-c3'
+[CPPTRAJ][mace][(0, 1, 2, 3)] xyz -> nc
+[GAFF2/new][mace][(0, 1, 2, 3)] refinement (MCS=True, step_size=15)
+[RMSD] BEST hrst=2.3950266e-05 RMSD=0.000661
+[FRCMOD_MCS][mace][(0, 1, 2, 3)] merge dat into cumulative: /data/parameters/fragment_mace_MCS.frcmod
+Saved MCS plot: /data/scanning/0_1_2_3/0_1_2_3_mace_MCS.png
+============================================================
+  WORKFLOW END
+============================================================
