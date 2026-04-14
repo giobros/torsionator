@@ -42,10 +42,12 @@ Place your pdb input and script inside the "main" folder insaide the repo:
 /<your_folder_path>/
 └── <NAME>.pdb # your input structure
 ```
+Torsionator uses Open Babel and RDKit, and they  rely on strict atom typing and element recognition, input PDB files were curated to remove ambiguities in atom naming and to explicitly define element fields; for instance, a chlorine atom originally labeled as ‘Cl’ in the atom name field was standardized by explicitly specifying ‘Cl’ in the element column to ensure correct parsing.
 
 ## 4 **Run**<br>
 The user can change and use the script run.sh inside the "main" folder to select which options apply to the scanning.
 To change the scanning options modify:
+
 ```
 
 PDB_FILE_NAME_ROOT="NAME"        # CHANGE THIS! file NAME of your PDB file, without .pdb
