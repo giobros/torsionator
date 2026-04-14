@@ -5,7 +5,7 @@ set -euo pipefail
 #this example is molecule n. 88 of TorsioNet500 dataset
 
 PDB_FILE_NAME_ROOT="fragment"
-PDB_FILE_DIR="../tests/example"
+PDB_FILE_DIR="../example"
 METHOD="mace"
 DIHEDRAL="[0,1,2,3]"
 CONF_ANALYSIS="false"
