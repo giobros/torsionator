@@ -54,7 +54,7 @@ PDB_FILE_NAME_ROOT="NAME"        # CHANGE THIS! file NAME of your PDB file, with
 PDB_FILE_DIR="your_folder_path"  # CHANGE THIS! folder (full path) that contains $PDB_FILE_NAME_ROOT.pdb
 METHOD="obi"                     # "all" | "mace" | "obi", NN calculator to use (default: obi)
 DIHEDRAL="all"                   # "all" | "[a,b,c,d]" | "print" (0-based indices): "all" to scan all rotatable bonds; "print" to list them; "[a,b,c,d]" for a specific one.
-CONF_ANALYSIS="false"            # "true" | "false" | "none", "false" → scan minimized input even if clashes exist; "true"  → generate conformers and use a clash-free starting geometry
+CONF_ANALYSIS="false"            # "true" | "false" | "none", "false" → scan minimized input even if clashes exist; "true"  → generate conformers, clash-free starting geometry
 BCS="false"                      # "true" | "false" | "none", "false" → abort; "true" → use the conformer with lowest LJ energy.
 MCS="true"                       # "true" | "false" | "none", "true"→  find lower-energy conformations per angle 
 N_CONF=20                        # number of conformers
@@ -64,6 +64,7 @@ STEP_SIZE=10                     # scan steps (5,10,15,20)
 DOUBLE_ROTATION="true"           # "true" | "false" | "none", false" →  just clockwise (cw), "true" →  both clockwise (cw) counterclockwise (ccw) scan when MCS=true; "
 NET_CHARGE="0"                   # net molecule charge, (default 0, other charges raise warning with mace and obi)
 SPIN="1"                         # molecule spin (2S+1) (default 1; other spins raise warning with mace and obi)
+
 # ------------------------------------------------
 ```
 
