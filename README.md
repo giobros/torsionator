@@ -35,7 +35,7 @@ To obtain the image faster and in a more reproducible way, you can simply concat
 ```
 cat torsionator.sif.part_a* > torsionator.sif.
 ```
-<method> available: uma / mace (mace_off23) /obi
+<method> available: uma (small) / mace (mace_off23) /obi
 
 For UMA: you need to install from https://huggingface.co/facebook/UMA the checkpoints "uma-s-1p1.pt", and put in folder "torsionator" of the repository, there the pipeline scripts are located.
 
