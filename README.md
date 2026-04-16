@@ -31,7 +31,10 @@ Enter the folder container and lunch the file .sh to create the image
 cd torsionator/container
 sudo apptainer build torsionator.sif torsionator.def
 ```
-
+To obtain the image faster and in a more reproducible way, you can simply concatenate the split SIF parts (available under the Releases section of this GitHub repository) instead of rebuilding it from the .def file: 
+```
+cat torsionator.sif.part_a* > torsionator.sif.
+```
 <method> available: uma / mace (mace_off23) /obi
 
 For UMA: you need to install from https://huggingface.co/facebook/UMA the checkpoints "uma-s-1p1.pt", and put in folder "torsionator" of the repository, there the pipeline scripts are located.
