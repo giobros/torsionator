@@ -1,5 +1,5 @@
 <p align="center">
-<img width="520" height="200" alt="logo" src="https://github.com/user-attachments/assets/40132121-0ba2-44f2-8177-a5e1b68d2f5b" />
+<img width="520" height="200" alt="logo" src="https://github.com/user-attachments/assets/82db9a0e-aeaa-40e5-9831-a50ceeeb0c2c" />
 </p>
 
 ## Torsionator  <br>
