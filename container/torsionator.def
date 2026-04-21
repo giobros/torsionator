@@ -1,0 +1,260 @@
+Bootstrap: docker
+From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
+
+%labels
+    Maintainer  gbrosio@iit.local
+    Version     3.0.0
+    Description torsionator — OBI + MACE + UMA, three conda envs, CUDA 11.8, AmberTools
+
+%environment
+    export PATH=/opt/conda/bin:$PATH
+    # Prepend all conda-env lib dirs so their bundled libstdc++ (GLIBCXX_3.4.29+)
+    # is found before the system GCC-9 libstdc++ (which only has up to 3.4.28).
+    export LD_LIBRARY_PATH=/opt/conda/envs/torsionator_obi/lib:/opt/conda/envs/torsionator_mace/lib:/opt/conda/envs/torsionator_uma/lib:/usr/local/cuda/lib64:/usr/local/cuda-11.8/lib64:${LD_LIBRARY_PATH:-}
+    export PYTHONUNBUFFERED=1
+    export TF_CPP_MIN_LOG_LEVEL=2
+    export OBI_ROOT=/app/OBIWAN
+    export OBIWAN_MODEL_PATH=/app/OBIWAN/results/models
+    # UMA model path — set at runtime with --env UMA_MODEL_PATH=/path/to/uma-s-1p1.pt
+    export UMA_MODEL_PATH=""
+    export PYTHONPATH=/
+
+%files
+    # Run: apptainer build torsionator.sif torsionator.def  (from the container/ directory)
+    obi.py              /opt/obi_custom/obi.py
+    ../torsionator      /torsionator
+
+%post -c /bin/bash
+    set -euxo pipefail
+    export DEBIAN_FRONTEND=noninteractive
+    export PATH=/opt/conda/bin:$PATH
+    export LD_LIBRARY_PATH=/usr/local/cuda/lib64:/usr/local/cuda-11.8/lib64:${LD_LIBRARY_PATH:-}
+
+    # ── 1) System deps ────────────────────────────────────────────────────────
+    # Switch mirrors to HTTPS — port 80 (HTTP) is blocked on some HPC networks
+    sed -i \
+        -e 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g' \
+        -e 's|http://security.ubuntu.com|https://security.ubuntu.com|g' \
+        /etc/apt/sources.list
+    apt-get -o Acquire::Retries=3 update -qq
+    apt-get install -y --no-install-recommends \
+        wget curl git build-essential ca-certificates libgl1 libglib2.0-0
+    rm -rf /var/lib/apt/lists/*
+
+    # ── 2) Miniconda (pinned installer) ───────────────────────────────────────
+    MINICONDA_VERSION="Miniconda3-py39_24.11.1-0-Linux-x86_64.sh"
+    wget -q -O /tmp/miniconda.sh \
+        "https://repo.anaconda.com/miniconda/${MINICONDA_VERSION}"
+    bash /tmp/miniconda.sh -b -p /opt/conda
+    rm /tmp/miniconda.sh
+    /opt/conda/bin/conda config --system --remove channels defaults 2>/dev/null || true
+    /opt/conda/bin/conda config --system --add channels conda-forge
+    /opt/conda/bin/conda config --system --set channel_priority flexible
+    /opt/conda/bin/conda install -y -n base -c conda-forge "mamba=1.5.12"
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # ENV 1 — torsionator_obi
+    #   Python 3.9 | TensorFlow 2.14 | OBI-WAN | AmberTools 22
+    # ══════════════════════════════════════════════════════════════════════════
+    /opt/conda/bin/mamba create -y -n torsionator_obi -c conda-forge \
+        "python=3.9.23" \
+        "ambertools=22" \
+        openbabel \
+        "rdkit=2023.03.3" \
+        "ase=3.23.0"
+
+    /opt/conda/bin/mamba run -n torsionator_obi pip install --no-cache-dir \
+        "tensorflow==2.14.0" \
+        "numpy==1.23.5" \
+        "Pillow==10.4.0" \
+        "matplotlib==3.9.4" \
+        "scipy==1.13.1" \
+        "pandas==2.0.3" \
+        "h5py==3.11.0" \
+        "tqdm==4.67.1" \
+        "joblib==1.5.1" \
+        "networkx==3.2.1" \
+        "ParmEd==4.0.0"
+
+    # Install custom OBI-WAN ASE calculator
+    mkdir -p /opt/conda/envs/torsionator_obi/lib/python3.9/site-packages/ase/calculators
+    cp -f /opt/obi_custom/obi.py \
+        /opt/conda/envs/torsionator_obi/lib/python3.9/site-packages/ase/calculators/obi.py
+
+    # Clone OBIWAN (architectures package required at import time)
+    git clone https://github.com/virtualmartire/OBIWAN.git /app/OBIWAN
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # ENV 2 — torsionator_mace
+    #   Python 3.9 | PyTorch 2.4.1+cu118 | MACE-torch 0.3.14 | AmberTools 22
+    # ══════════════════════════════════════════════════════════════════════════
+    /opt/conda/bin/mamba create -y -n torsionator_mace -c conda-forge \
+        "python=3.9.23" \
+        "ambertools=22" \
+        openbabel \
+        "rdkit=2023.03.3" \
+        "ase=3.23.0"
+
+    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+        "torch==2.4.1+cu118" \
+        "torchvision==0.19.1+cu118" \
+        "torchaudio==2.4.1+cu118" \
+        --index-url https://download.pytorch.org/whl/cu118
+
+    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+        "mace-torch==0.3.14" \
+        "e3nn==0.4.4" \
+        "torch-ema==0.3" \
+        "torchmetrics==1.8.2"
+
+    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+        "Pillow==10.4.0" \
+        "matplotlib==3.9.4" \
+        "scipy==1.13.1" \
+        "pandas==2.0.3" \
+        "h5py==3.11.0" \
+        "tqdm==4.67.1" \
+        "joblib==1.5.1" \
+        "networkx==3.2.1" \
+        "ParmEd==4.0.0"
+
+    # Force numpy back to 1.x — mace-torch pulls numpy 2.x which breaks downstream
+    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+        --force-reinstall "numpy==1.26.4"
+
+    # ══════════════════════════════════════════════════════════════════════════
+    # ENV 3 — torsionator_uma
+    #   Python 3.11 | PyTorch | fairchem-core ≥2.0 | AmberTools 23
+    # ══════════════════════════════════════════════════════════════════════════
+    /opt/conda/bin/mamba create -y -n torsionator_uma -c conda-forge \
+        "python=3.11" \
+        "ambertools=23" \
+        openbabel \
+        rdkit \
+        "numpy>=1.24,<2" \
+        scipy \
+        "pandas>=2.0,<2.2" \
+        matplotlib \
+        tqdm \
+        setuptools
+
+    /opt/conda/bin/mamba run -n torsionator_uma pip install --no-cache-dir \
+        torch torchvision torchaudio \
+        --index-url https://download.pytorch.org/whl/cu118
+
+    /opt/conda/bin/mamba run -n torsionator_uma pip install --no-cache-dir \
+        "fairchem-core>=2.0.0" \
+        torch_geometric \
+        "ParmEd==4.0.0"
+
+    # Enforce numpy <2
+    /opt/conda/bin/mamba run -n torsionator_uma pip install --no-cache-dir \
+        --force-reinstall "numpy<2"
+
+    # ── Common mount-points ───────────────────────────────────────────────────
+    mkdir -p /workspace /data
+
+    # ── Cleanup ───────────────────────────────────────────────────────────────
+    /opt/conda/bin/conda clean -afy 2>/dev/null || true
+    for env in torsionator_obi torsionator_mace torsionator_uma; do
+        /opt/conda/bin/mamba run -n "$env" pip cache purge 2>/dev/null || true
+    done
+
+%test
+    set -e
+    export PATH=/opt/conda/bin:$PATH
+    export PYTHONPATH=/
+    export LD_LIBRARY_PATH=/opt/conda/envs/torsionator_obi/lib:/opt/conda/envs/torsionator_mace/lib:/opt/conda/envs/torsionator_uma/lib:/usr/local/cuda/lib64:/usr/local/cuda-11.8/lib64
+
+    echo "=== Testing torsionator_obi ==="
+    /opt/conda/envs/torsionator_obi/bin/python -c "
+import numpy, tensorflow, rdkit, ase
+print('numpy     :', numpy.__version__)
+print('tensorflow:', tensorflow.__version__)
+print('rdkit     :', rdkit.__version__)
+print('ase       :', ase.__version__)
+import torsionator.obi_torsionator; print('obi_torsionator OK')
+"
+
+    echo "=== Testing torsionator_mace ==="
+    /opt/conda/envs/torsionator_mace/bin/python -c "
+import numpy, torch, mace, rdkit, ase
+print('numpy :', numpy.__version__)
+print('torch :', torch.__version__)
+print('mace  :', mace.__version__)
+print('CUDA  :', torch.cuda.is_available())
+import torsionator.mace_torsionator; print('mace_torsionator OK')
+"
+
+    echo "=== Testing torsionator_uma ==="
+    /opt/conda/envs/torsionator_uma/bin/python -c "
+import numpy, torch
+print('numpy :', numpy.__version__)
+print('torch :', torch.__version__)
+print('CUDA  :', torch.cuda.is_available())
+import torsionator.uma_torsionator; print('uma_torsionator OK')
+"
+
+    /opt/conda/envs/torsionator_obi/bin/cpptraj --version
+    /opt/conda/envs/torsionator_obi/bin/antechamber -h 2>&1 | head -2
+    echo '=== BUILD TEST PASSED ==='
+
+%runscript
+    # Dispatch to the right conda environment based on METHOD env var (default: obi).
+    # Override at runtime: apptainer run --env METHOD=mace torsionator.sif <args>
+    METHOD="${METHOD:-obi}"
+    case "$METHOD" in
+        obi|mace|uma) ;;
+        *)
+            echo "ERROR: METHOD must be one of: obi, mace, uma" >&2
+            exit 1
+            ;;
+    esac
+
+    export PATH="/opt/conda/envs/torsionator_${METHOD}/bin:/opt/conda/bin:$PATH"
+    export PYTHONPATH=/
+    export LD_LIBRARY_PATH="/opt/conda/envs/torsionator_${METHOD}/lib:/usr/local/cuda/lib64:/usr/local/cuda-11.8/lib64:${LD_LIBRARY_PATH:-}"
+
+    # OBI-specific extras
+    if [ "$METHOD" = "obi" ]; then
+        export OBI_ROOT=/app/OBIWAN
+        export OBIWAN_MODEL_PATH=/app/OBIWAN/results/models
+    fi
+
+    cd /workspace
+    exec "$@"
+
+%help
+    BUILD (run from the container/ directory):
+      apptainer build --fakeroot torsionator.sif torsionator.def
+      sudo apptainer build torsionator.sif torsionator.def
+
+    TEST (after build):
+      apptainer test --nv torsionator.sif
+
+    RUN — select the NNP via the METHOD env var (default: obi):
+      apptainer exec --nv --env METHOD=obi      --bind data:/data torsionator.sif \
+          python3 -m torsionator.obi_torsionator --pdb /data/mol.pdb [...]
+
+      apptainer exec --nv --env METHOD=mace     --bind data:/data torsionator.sif \
+          python3 -m torsionator.mace_torsionator --pdb /data/mol.pdb [...]
+
+      apptainer exec --nv --env METHOD=uma --env UMA_MODEL_PATH=/path/to/uma-s-1p1.pt \
+          --bind data:/data torsionator.sif \
+          python3 -m torsionator.uma_torsionator --pdb /data/mol.pdb --net_charge -1 [...]
+
+    ENVIRONMENTS:
+      torsionator_obi     Python 3.9 | TF 2.14 | numpy 1.23.5 | AmberTools 22
+      torsionator_mace    Python 3.9 | PyTorch 2.4.1+cu118 | MACE 0.3.14 | numpy 1.26.4 | AmberTools 22
+      torsionator_uma     Python 3.11 | PyTorch | fairchem-core ≥2.0 | numpy <2 | AmberTools 23
+
+    CHARGED MOLECULES:
+      OBI / MACE: charge is ignored by the NNP but forwarded to GAFF2/antechamber.
+                  A warning is printed. Prefer UMA for charged systems.
+      UMA       : fully charge-aware (atoms.info["charge"] injected).
+
+    NOTES:
+      - UMA model is NOT baked into the image. Pass its path at runtime via
+        --env UMA_MODEL_PATH=/path/to/uma-s-1p1.pt (or via run.sh UMA_MODEL_PATH var).
+      - OBIWAN is cloned from GitHub into /app/OBIWAN during build.
+      - CUDA 11.8 required.
