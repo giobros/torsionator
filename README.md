@@ -81,7 +81,7 @@ If BCS=true
 ```
 /<your_folder_path>/
 ├── conformers/
-│   ├── pdb/*.pdb 
+│   ├── pdb/n.pdb  n= n_conf + 1 (input pdb)   
 │   └── method/
 │      ├── initial_energies.txt
 │      ├── optimized_energies.txt
@@ -113,11 +113,11 @@ If MCS = true:
 ├── conformers/
 │   ├── pdb/*.pdb 
 │   └──  method/      
-│        └── n_confs folders/minimized.pdb  
+│        └── n folders/minimized.pdb  n= n_conf + 1 (input pdb)
 ├── scanning/
 │     └── a_b_c_d/
 │       ├── method/                     
-│       │   ├── n_confs folders (+ n_confs_ccw)/scan_pdbs/*.pdb
+│       │   ├── n folders (+ n_ccw)/scan_pdbs/*.pdb    n= n_conf + 1 (input pdb)
 │       │   └──  MCS/
 │       │       ├── angles_vs_energies_final.txt   # sorted & min-shifted
 │       │       ├── geometries.xyz
