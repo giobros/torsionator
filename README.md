@@ -67,8 +67,6 @@ STEP_SIZE=10                     # scan steps (5,10,15,20)
 DOUBLE_ROTATION="true"           # "true" | "false" | "none", false" →  just clockwise (cw), "true" →  both clockwise (cw) counterclockwise (ccw) scan when MCS=true; "
 NET_CHARGE="0"                   # net molecule charge, (default 0, other charges raise warning with mace and obi)
 SPIN="1"                         # molecule spin (2S+1) (default 1; other spins raise warning with mace and obi)
-
-# ------------------------------------------------
 ```
 
 Suggestion: print the dihedrals before passing the wanted one, the code should recognize your input but my suggestion is to check the code-preferred dihedral definition.
