@@ -140,6 +140,17 @@ If MCS = true:
 
 
 ```
+If --dihedral = all: 
+```
+
+/<your_folder_path>/
+├── scanning/
+│     ├──_joint_<method>/
+│     │        └── output                       # MDGX torsion fit
+│        │          └──hrst/hrst.dat  
+└── parameters/<NAME>_<method>.frcmod  # frcmod with updated DIHE lines
+
+```
 The workflow togheter with the errors are written to:
 ```
 /your_folder_path/workflow.log
