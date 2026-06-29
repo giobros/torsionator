@@ -515,11 +515,22 @@ def plot_shifted_energy_profiles_mcs(
     best_profile: Optional[str] = None,
 ) -> None:
     """Plot MCS energy profiles for a single method: NN/ML-MCS, GAFF2-old-MCS, GAFF2-best."""
+    # BEGIN ADDITION: import glob for conformer profile discovery
+    import glob
+    # END ADDITION
     import matplotlib.pyplot as plt
 
     dih_str = "_".join(map(str, dihedral))
     base = os.path.join(base_dir, "scanning", dih_str)
 
+    i, j, k, l = dihedral
+
+    conf_finals = sorted(
+        p for p in glob.glob(os.path.join(base, method, "*", "angles_vs_energies_final.txt"))
+        if os.path.basename(os.path.dirname(p)) != "MCS"
+    )
+
+    # --- MCS plot ---
     plt.figure(figsize=(10, 6))
     has_data = False
 
@@ -532,7 +543,7 @@ def plot_shifted_energy_profiles_mcs(
     gaff2_old_path = os.path.join(base, "GAFF2", "old", method, "dd_ee_shifted")
     if os.path.isfile(gaff2_old_path):
         data = np.loadtxt(gaff2_old_path)
-        plt.plot(data[:, 0], data[:, 1], "s--", label = "GAFF2")
+        plt.plot(data[:, 0], data[:, 1], "s--", label="GAFF2")
         has_data = True
 
     legacy_merged = os.path.join(base, "GAFF2", "old", "dd_ee_merged_shifted")
@@ -547,7 +558,6 @@ def plot_shifted_energy_profiles_mcs(
         has_data = True
 
     if has_data:
-        i, j, k, l = dihedral
         plt.xlabel("Dihedral Angle (degrees)")
         plt.ylabel("Relative Energy (kcal/mol)")
         plt.title(f"MCS Dihedral Scan Energy Profile [{method}]: {i}-{j}-{k}-{l}")
@@ -558,4 +568,40 @@ def plot_shifted_energy_profiles_mcs(
         out_png = os.path.join(base, f"{dih_str}_{method}_MCS.png")
         plt.savefig(out_png)
         logging.info("Saved MCS plot: %s", out_png)
+    plt.close()
+
+    # --- combined plot: all conformers + MCS ---
+    plt.figure(figsize=(10, 6))
+    has_data = False
+    legend_shown = False
+    for cf in conf_finals:
+        try:
+            cdata = np.loadtxt(cf)
+        except Exception:
+            continue
+        if cdata.ndim < 2 or cdata.shape[0] == 0:
+            continue
+        kw = {"label": "conformers"} if not legend_shown else {}
+        plt.plot(cdata[:, 0], cdata[:, 1] * CONV_EH_TO_KCAL_MOL,
+                 color="steelblue", alpha=0.4, linewidth=1, zorder=1, **kw)
+        legend_shown = True
+    has_data = has_data or legend_shown
+
+    if os.path.isfile(mcs_path):
+        data = np.loadtxt(mcs_path)
+        plt.plot(data[:, 0], data[:, 1] * CONV_EH_TO_KCAL_MOL, "o-", color="black",
+                 linewidth=2, zorder=2, label=f"{method}-MCS")
+        has_data = True
+
+    if has_data:
+        plt.xlabel("Dihedral Angle (degrees)")
+        plt.ylabel("Relative Energy (kcal/mol)")
+        plt.title(f"Conformers + MCS [{method}]: {i}-{j}-{k}-{l}")
+        plt.legend()
+        plt.xlim(0, 360)
+        plt.grid(True)
+        plt.tight_layout()
+        out_all = os.path.join(base, f"{dih_str}_{method}_conformers_MCS.png")
+        plt.savefig(out_all)
+        logging.info("Saved combined plot: %s", out_all)
     plt.close()
