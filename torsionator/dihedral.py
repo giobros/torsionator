@@ -496,7 +496,7 @@ def plot_shifted_energy_profiles(
     if has_data:
         i, j, k, l = dihedral
         plt.xlabel("Dihedral Angle (degrees)")
-        plt.ylabel("Relative Energy (kcal/mol)")
+        plt.ylabel("Energy (kcal/mol)")
         plt.title(f"Dihedral Scan Energy Profile [{method}]: {i}-{j}-{k}-{l}")
         plt.legend()
         plt.xlim(0, 360)
@@ -559,7 +559,7 @@ def plot_shifted_energy_profiles_mcs(
 
     if has_data:
         plt.xlabel("Dihedral Angle (degrees)")
-        plt.ylabel("Relative Energy (kcal/mol)")
+        plt.ylabel("Energy (kcal/mol)")
         plt.title(f"MCS Dihedral Scan Energy Profile [{method}]: {i}-{j}-{k}-{l}")
         plt.legend()
         plt.xlim(0, 360)
@@ -595,7 +595,7 @@ def plot_shifted_energy_profiles_mcs(
 
     if has_data:
         plt.xlabel("Dihedral Angle (degrees)")
-        plt.ylabel("Relative Energy (kcal/mol)")
+        plt.ylabel("Energy (kcal/mol)")
         plt.title(f"Conformers + MCS [{method}]: {i}-{j}-{k}-{l}")
         plt.legend()
         plt.xlim(0, 360)
