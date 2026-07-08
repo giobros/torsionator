@@ -78,7 +78,7 @@ NET_CHARGE="0"                   # net molecule charge, (default 0, other charge
 SPIN="1"                         # molecule spin (2S+1) (default 1; other spins raise warning with mace and obi)
 ```
 
-Look at container/run_example.sh for a "real" case example, where the input .pbd (fragment.pdb) used is located in folder example/, same folder where Torsionator generated its outputs . 
+Look at container/run_example.sh for a "real" case example, where the input .pbd (fragment.pdb) used is located in folder example/, same folder where Torsionator generated its outputs . Other format are supported (SDF, MOL2, MOL, XYZ,  CIF, GRO, or PDBQT), however PDB is recommended, as other formats are converted internally via Open Babel.
 
 Suggestion: print the dihedrals before passing the wanted one, the code should recognize your input but my suggestion is to check the code-preferred dihedral definition.
 
