@@ -3,7 +3,7 @@ import os
 
 from .config import Config
 from .workflow import Workflow
-from .conect_fix import ensure_conect_with_obabel
+from .conect_fix import add_input_format_args, ensure_conect_with_obabel, resolve_input_pdb
 from .io_utils import backup_existing_outputs
 
 
@@ -11,7 +11,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         description="torsionator (OBI): torsion-parameter refinement with OBI-WAN + GAFF2."
     )
-    p.add_argument("--pdb", required=True, help="Input PDB file.")
+    add_input_format_args(p)
     p.add_argument(
         "--dihedral", type=str, default="all",
         help="'all' to scan all rotatable bonds, 'print' to list them, or '[a,b,c,d]' for a specific one.",
@@ -63,13 +63,14 @@ def _build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     args = _build_parser().parse_args()
 
-    ensure_conect_with_obabel(args.pdb, in_place=True)
+    pdb_path = resolve_input_pdb(args)
+    ensure_conect_with_obabel(pdb_path, in_place=True)
 
-    cfg = Config(base_dir=os.path.abspath(os.path.dirname(args.pdb)))
+    cfg = Config(base_dir=os.path.abspath(os.path.dirname(pdb_path)))
     backup_existing_outputs(cfg.base_dir)
     wf = Workflow(cfg)
     wf.run(
-        pdb_file=args.pdb,
+        pdb_file=pdb_path,
         method="obi",
         dihedral=args.dihedral,
         conf_analysis=args.conf_analysis,
