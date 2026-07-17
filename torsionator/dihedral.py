@@ -1,3 +1,4 @@
+
 import logging
 import os
 from collections import deque
@@ -525,8 +526,8 @@ def plot_shifted_energy_profiles_mcs(
 
     i, j, k, l = dihedral
 
-    conf_finals = sorted(
-        p for p in glob.glob(os.path.join(base, method, "*", "angles_vs_energies_final.txt"))
+    conf_raws = sorted(
+        p for p in glob.glob(os.path.join(base, method, "*", "angles_vs_energies.txt"))
         if os.path.basename(os.path.dirname(p)) != "MCS"
     )
 
@@ -570,33 +571,46 @@ def plot_shifted_energy_profiles_mcs(
         logging.info("Saved MCS plot: %s", out_png)
     plt.close()
 
-    # --- combined plot: all conformers + MCS ---
+    # --- combined plot: all conformers (pre-shift) + MCS (pre-shift) ---
     plt.figure(figsize=(10, 6))
     has_data = False
-    legend_shown = False
-    for cf in conf_finals:
+    legend_shown_cw = False
+    legend_shown_ccw = False
+    for cf in conf_raws:
         try:
             cdata = np.loadtxt(cf)
         except Exception:
             continue
         if cdata.ndim < 2 or cdata.shape[0] == 0:
             continue
-        kw = {"label": "conformers"} if not legend_shown else {}
-        plt.plot(cdata[:, 0], cdata[:, 1] * CONV_EH_TO_KCAL_MOL,
-                 color="steelblue", alpha=0.4, linewidth=1, zorder=1, **kw)
-        legend_shown = True
-    has_data = has_data or legend_shown
+        order = np.argsort(cdata[:, 0])
+        cdata = cdata[order]
+        conf_dir_name = os.path.basename(os.path.dirname(cf))
+        is_ccw = conf_dir_name.endswith("_ccw")
+        if is_ccw:
+            kw = {"label": "conformers (ccw)"} if not legend_shown_ccw else {}
+            style = dict(color="darkorange", linestyle="--")
+            legend_shown_ccw = True
+        else:
+            kw = {"label": "conformers (cw)"} if not legend_shown_cw else {}
+            style = dict(color="steelblue", linestyle="-")
+            legend_shown_cw = True
+        plt.plot(cdata[:, 0], cdata[:, 1] * CONV_EH_TO_KCAL_MOL, marker="o", markersize=3,
+                 alpha=0.4, linewidth=1, zorder=1, **style, **kw)
+    has_data = has_data or legend_shown_cw or legend_shown_ccw
 
-    if os.path.isfile(mcs_path):
-        data = np.loadtxt(mcs_path)
-        plt.plot(data[:, 0], data[:, 1] * CONV_EH_TO_KCAL_MOL, "o-", color="black",
-                 linewidth=2, zorder=2, label=f"{method}-MCS")
+    mcs_raw_path = os.path.join(base, method, "MCS", "angles_vs_energies.txt")
+    if os.path.isfile(mcs_raw_path):
+        data = np.loadtxt(mcs_raw_path)
+        data = data[np.argsort(data[:, 0])]
+        plt.plot(data[:, 0], data[:, 1] * CONV_EH_TO_KCAL_MOL, marker="o", linestyle="-",
+                 color="black", linewidth=2, zorder=2, label=f"{method}-MCS")
         has_data = True
 
     if has_data:
         plt.xlabel("Dihedral Angle (degrees)")
         plt.ylabel("Energy (kcal/mol)")
-        plt.title(f"Conformers + MCS [{method}]: {i}-{j}-{k}-{l}")
+        plt.title(f"Conformers + MCS (pre-shift) [{method}]: {i}-{j}-{k}-{l}")
         plt.legend()
         plt.xlim(0, 360)
         plt.grid(True)
