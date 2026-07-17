@@ -32,7 +32,7 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     p.add_argument(
-        "--multiplicity", type=int, choices=[0, 1, 2, 3, 4, 6], default=6,
+        "-m", "--multiplicity", type=int, choices=[0, 1, 2, 3, 4, 6], default=6,
         help="Max torsion periodicity preset. 0 = keep frcmod multiplicities unchanged.",
     )
     p.add_argument("--RMSD", type=float, default=0.5, help="RMSD pruning threshold for conformer screening.")
