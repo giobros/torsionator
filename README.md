@@ -110,7 +110,7 @@ If BCS=true
 │       │         └──hrst/hrst.dat
 │       ├── GAFF2/old/method/           ← old GAFF2 fit
 │       ├── GAFF2/new/method/  
-│       └── a_b_c_d.png                        # plotted profile (kcal/mol)
+│       └── a_b_c_d_<method>.png                        # plotted profile (kcal/mol)
 └── parameters/<NAME>_<method>.frcmod  # frcmod with updated DIHE lines
 
 
@@ -133,8 +133,9 @@ If MCS = true:
 │       │       └── output                       # MDGX torsion fit
 │       │         └──hrst/hrst.dat
 │       ├── GAFF2/old/method/           ← old GAFF2 fit
-│       ├── GAFF2/new/method/  
-│       └── a_b_c_d_MCS.png                        # plotted profile (kcal/mol)
+│       ├── GAFF2/new/method/
+│       ├──  a_b_c_d_<method>_conformers_MCS.png            # plotted MCS profile + conformer ones  (kcal/mol)
+│       └── a_b_c_d_<method>_MCS.png                        # plotted MCS profile (kcal/mol)
 └── parameters/<NAME>_<method>.frcmod  # frcmod with updated DIHE lines
 
 
