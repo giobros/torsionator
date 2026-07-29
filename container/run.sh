@@ -1,10 +1,10 @@
 #!/bin/bash
 set -euo pipefail
-
+###  change this --pdb "/data/${PDB_FILE_NAME_ROOT}.pdb with     --format "/data/${PDB_FILE_NAME_ROOT}.<format> if using sdf/mol/mol2/xyz (in liine 72)" \" \
 # ---------------- USER SETTINGS ----------------
 
-PDB_FILE_NAME_ROOT="NAME"        # CHANGE THIS! file NAME of your PDB file, without .pdb
-PDB_FILE_DIR="your_folder_path"  # CHANGE THIS! folder (full path) that contains $PDB_FILE_NAME_ROOT.pdb
+PDB_FILE_NAME_ROOT="NAME"        # CHANGE THIS! file NAME of your PDB file, without .<format>
+PDB_FILE_DIR="your_folder_path"  # CHANGE THIS! folder (full path) that contains $PDB_FILE_NAME_ROOT.<format>
 METHOD="obi"                     # "uma" | "mace" | "obi", NN calculator to use (default: obi)
 DIHEDRAL="all"                   # "all" | "[a,b,c,d]" | "print" (0-based indices): "all" to scan all rotatable bonds; "print" to list them; "[a,b,c,d]" for a specific one.
 CONF_ANALYSIS="false"            # "true" | "false" | "none", "false" → scan minimized input even if clashes exist; "true"  → generate conformers, clash-free starting geometry
