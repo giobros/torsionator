@@ -576,6 +576,24 @@ def plot_shifted_energy_profiles_mcs(
     has_data = False
     legend_shown_cw = False
     legend_shown_ccw = False
+
+    # small addition: find the global minimum across all conformers + MCS,
+    # so every curve below shares one zero-reference instead of being
+    # plotted as raw pre-shift absolute energies
+    global_min = None
+    mcs_raw_path = os.path.join(base, method, "MCS", "angles_vs_energies.txt")
+    for cf in conf_raws + [mcs_raw_path]:
+        if not os.path.isfile(cf):
+            continue
+        try:
+            cdata = np.loadtxt(cf)
+        except Exception:
+            continue
+        if cdata.ndim < 2 or cdata.shape[0] == 0:
+            continue
+        m = cdata[:, 1].min()
+        global_min = m if global_min is None else min(global_min, m)
+
     for cf in conf_raws:
         try:
             cdata = np.loadtxt(cf)
@@ -595,22 +613,21 @@ def plot_shifted_energy_profiles_mcs(
             kw = {"label": "conformers (cw)"} if not legend_shown_cw else {}
             style = dict(color="steelblue", linestyle="-")
             legend_shown_cw = True
-        plt.plot(cdata[:, 0], cdata[:, 1] * CONV_EH_TO_KCAL_MOL, marker="o", markersize=3,
+        plt.plot(cdata[:, 0], (cdata[:, 1] - global_min) * CONV_EH_TO_KCAL_MOL, marker="o", markersize=3,
                  alpha=0.4, linewidth=1, zorder=1, **style, **kw)
     has_data = has_data or legend_shown_cw or legend_shown_ccw
 
-    mcs_raw_path = os.path.join(base, method, "MCS", "angles_vs_energies.txt")
     if os.path.isfile(mcs_raw_path):
         data = np.loadtxt(mcs_raw_path)
         data = data[np.argsort(data[:, 0])]
-        plt.plot(data[:, 0], data[:, 1] * CONV_EH_TO_KCAL_MOL, marker="o", linestyle="-",
+        plt.plot(data[:, 0], (data[:, 1] - global_min) * CONV_EH_TO_KCAL_MOL, marker="o", linestyle="-",
                  color="black", linewidth=2, zorder=2, label=f"{method}-MCS")
         has_data = True
 
     if has_data:
         plt.xlabel("Dihedral Angle (degrees)")
-        plt.ylabel("Energy (kcal/mol)")
-        plt.title(f"Conformers + MCS (pre-shift) [{method}]: {i}-{j}-{k}-{l}")
+        plt.ylabel("Relative Energy (kcal/mol)")
+        plt.title(f"Conformers + MCS (shifted) [{method}]: {i}-{j}-{k}-{l}")
         plt.legend()
         plt.xlim(0, 360)
         plt.grid(True)
