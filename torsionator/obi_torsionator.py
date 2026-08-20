@@ -9,7 +9,7 @@ from .io_utils import backup_existing_outputs
 
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
-        description="torsionator (OBI): torsion-parameter refinement with OBI-WAN + GAFF2."
+        description="torsionator (UMA): torsion-parameter refinement with UMA + GAFF2."
     )
     add_input_format_args(p)
     p.add_argument(
@@ -51,11 +51,11 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument(
         "--net_charge", type=int, default=0,
-        help="Net charge of the molecule (default: 0). OBI-WAN ignores charge in NNP calculation; forwarded to GAFF2.",
+        help="Net charge of the molecule (default: 0). UMA fully supports charged molecules.",
     )
     p.add_argument(
         "--spin", type=int, default=1,
-        help="Spin multiplicity of the molecule (default: 1). OBI-WAN ignores spin in NNP calculation; forwarded to GAFF2.",
+        help="Spin multiplicity of the molecule (default: 1). UMA fully supports open-shell systems.",
     )
     return p
 
@@ -71,7 +71,7 @@ def main() -> None:
     wf = Workflow(cfg)
     wf.run(
         pdb_file=pdb_path,
-        method="obi",
+        method="uma",
         dihedral=args.dihedral,
         conf_analysis=args.conf_analysis,
         multiplicity=args.multiplicity,
