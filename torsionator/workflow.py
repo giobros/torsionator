@@ -48,22 +48,17 @@ class Workflow:
     # -------------------------------------------------------------------------
 
     @staticmethod
-    def _basis_from_max_mult(n: int) -> Tuple[int, ...]:
+    def _basis_from_max_mult(n) -> Tuple[int, ...]:
         presets = {
             1: (1,),
             2: (-2, 1),
             3: (-3, -2, 1),
             4: (-4, -3, -2, 1),
             6: (-6, -4, -3, -2, 1),
-            8: (-8, -6, -4, -3, -2, 1),
-            9: (-9, -8, -6, -4, -3, -2, 1),
-            12: (-12, -9, -8, -6, -4, -3, -2, 1),
-            16: (-16, -12, -9, -8, -6, -4, -3, -2, 1),
-            "all": (-9, -8, -7, -6, -5, -4, -3, -2, 1),  
+            9: (-9, -8, -7, -6, -5, -4, -3, -2, 1),
         }
-        
         if n not in presets:
-            raise ValueError(f"multiplicity must be one of 0, 1, 2, 3, 4, 6 (got {n})")
+            raise ValueError("multiplicity must be one of 0, 1, 2, 3, 4, 6, 9")
         return presets[n]
 
     # -------------------------------------------------------------------------
@@ -231,7 +226,7 @@ class Workflow:
         method: str,
         dihedral: str,
         conf_analysis: Optional[str] = "false",
-        multiplicity: int = 6,
+        multiplicity=6,
         BCS: Optional[str] = "false",
         RMSD: float = 0.5,
         n_confs: int = 20,
@@ -252,7 +247,7 @@ class Workflow:
         dbl_norm = io_utils.norm_flag(double_rotation)
         step_size = io_utils.validate_step_size(step_size)
 
-        if multiplicity == 0:
+        if int(multiplicity) == 0:
             auto_basis = True
             expand_basis = True
             basis_tuple = None
