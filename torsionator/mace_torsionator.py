@@ -7,6 +7,19 @@ from .conect_fix import add_input_format_args, ensure_conect_with_obabel, resolv
 from .io_utils import backup_existing_outputs
 
 
+_MULTIPLICITY_CHOICES = [0, 1, 2, 3, 4, 6, 9]
+
+
+def _multiplicity_arg(value: str):
+    try:
+        n = int(value)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"invalid multiplicity '{value}'")
+    if n not in _MULTIPLICITY_CHOICES:
+        raise argparse.ArgumentTypeError(f"multiplicity must be one of {_MULTIPLICITY_CHOICES}")
+    return n
+
+
 def _build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         description="torsionator (MACE): torsion-parameter refinement with MACE + GAFF2."
@@ -32,8 +45,11 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     p.add_argument(
-        "-m", "--multiplicity", type=int, choices=[0, 1, 2, 3, 4, 6, 8, 9, 12, 16, "all"], default=6,
-        help="Max torsion periodicity preset. 0 = keep frcmod multiplicities unchanged.",
+        "-m", "--multiplicity", type=_multiplicity_arg, default=6,
+        help=(
+            "Max torsion periodicity preset (0,1,2,3,4,6,9). "
+            "0 = keep frcmod multiplicities unchanged."
+        ),
     )
     p.add_argument("--RMSD", type=float, default=0.5, help="RMSD pruning threshold for conformer screening.")
     p.add_argument("--n_confs", type=int, default=20, help="Number of conformers to generate.")
