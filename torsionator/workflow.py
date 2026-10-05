@@ -29,6 +29,7 @@ from .multi_conf_scan import (
     _scan_all_conformers,
 )
 from .selection import ConformerSelector
+from .conformer_ranking import rank_mcs_profile_minima
 from . import io_utils
 
 
@@ -488,6 +489,14 @@ class Workflow:
                     if not os.path.exists(mcs_xyz):
                         raise FileNotFoundError(f"[MCS][{m}][{d_tup}] missing merged xyz in {out_dir}")
                     mcs_xyz_per_dihedral[d_tup] = mcs_xyz
+
+                # Rank the minima of all MCS profiles (additional output only)
+                try:
+                    rank_mcs_profile_minima(
+                        self.log, self.cfg.base_dir, m, dihedrals, ref_pdb=pdb_file,
+                    )
+                except Exception as exc:
+                    self.log.warning("[MCS][%s] conformer ranking failed: %s", m, exc)
 
                 # ── Phase 1: GAFF2/old (antechamber once, scan per dihedral) ──
                 ref_d = dihedrals[0]
