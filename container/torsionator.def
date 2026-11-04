@@ -1,3 +1,4 @@
+
 Bootstrap: docker
 From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
 
@@ -50,20 +51,19 @@ From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
     /opt/conda/bin/conda config --system --remove channels defaults 2>/dev/null || true
     /opt/conda/bin/conda config --system --add channels conda-forge
     /opt/conda/bin/conda config --system --set channel_priority flexible
-    /opt/conda/bin/conda install -y -n base -c conda-forge "mamba=1.5.12"
 
     # ══════════════════════════════════════════════════════════════════════════
     # ENV 1 — torsionator_obi
     #   Python 3.9 | TensorFlow 2.14 | OBI-WAN | AmberTools 22
     # ══════════════════════════════════════════════════════════════════════════
-    /opt/conda/bin/mamba create -y -n torsionator_obi -c conda-forge \
+    /opt/conda/bin/conda create -y -n torsionator_obi -c conda-forge \
         "python=3.9.23" \
         "ambertools=22" \
         openbabel \
         "rdkit=2023.03.3" \
         "ase=3.23.0"
 
-    /opt/conda/bin/mamba run -n torsionator_obi pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_obi pip install --no-cache-dir \
         "tensorflow==2.14.0" \
         "numpy==1.23.5" \
         "Pillow==10.4.0" \
@@ -88,26 +88,26 @@ From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
     # ENV 2 — torsionator_mace
     #   Python 3.9 | PyTorch 2.4.1+cu118 | MACE-torch 0.3.14 | AmberTools 22
     # ══════════════════════════════════════════════════════════════════════════
-    /opt/conda/bin/mamba create -y -n torsionator_mace -c conda-forge \
+    /opt/conda/bin/conda create -y -n torsionator_mace -c conda-forge \
         "python=3.9.23" \
         "ambertools=22" \
         openbabel \
         "rdkit=2023.03.3" \
         "ase=3.23.0"
 
-    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_mace pip install --no-cache-dir \
         "torch==2.4.1+cu118" \
         "torchvision==0.19.1+cu118" \
         "torchaudio==2.4.1+cu118" \
         --index-url https://download.pytorch.org/whl/cu118
 
-    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_mace pip install --no-cache-dir \
         "mace-torch==0.3.14" \
         "e3nn==0.4.4" \
         "torch-ema==0.3" \
         "torchmetrics==1.8.2"
 
-    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_mace pip install --no-cache-dir \
         "Pillow==10.4.0" \
         "matplotlib==3.9.4" \
         "scipy==1.13.1" \
@@ -119,14 +119,14 @@ From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
         "ParmEd==4.0.0"
 
     # Force numpy back to 1.x — mace-torch pulls numpy 2.x which breaks downstream
-    /opt/conda/bin/mamba run -n torsionator_mace pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_mace pip install --no-cache-dir \
         --force-reinstall "numpy==1.26.4"
 
     # ══════════════════════════════════════════════════════════════════════════
     # ENV 3 — torsionator_uma
     #   Python 3.11 | PyTorch | fairchem-core ≥2.0 | AmberTools 23
     # ══════════════════════════════════════════════════════════════════════════
-    /opt/conda/bin/mamba create -y -n torsionator_uma -c conda-forge \
+    /opt/conda/bin/conda create -y -n torsionator_uma -c conda-forge \
         "python=3.11" \
         "ambertools=23" \
         openbabel \
@@ -138,17 +138,17 @@ From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
         tqdm \
         setuptools
 
-    /opt/conda/bin/mamba run -n torsionator_uma pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_uma pip install --no-cache-dir \
         torch torchvision torchaudio \
         --index-url https://download.pytorch.org/whl/cu118
 
-    /opt/conda/bin/mamba run -n torsionator_uma pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_uma pip install --no-cache-dir \
         "fairchem-core>=2.0.0" \
         torch_geometric \
         "ParmEd==4.0.0"
 
     # Enforce numpy <2
-    /opt/conda/bin/mamba run -n torsionator_uma pip install --no-cache-dir \
+    /opt/conda/bin/conda run --no-capture-output -n torsionator_uma pip install --no-cache-dir \
         --force-reinstall "numpy<2"
 
     # ── Common mount-points ───────────────────────────────────────────────────
@@ -157,7 +157,7 @@ From: nvidia/cuda:11.8.0-cudnn8-devel-ubuntu20.04
     # ── Cleanup ───────────────────────────────────────────────────────────────
     /opt/conda/bin/conda clean -afy 2>/dev/null || true
     for env in torsionator_obi torsionator_mace torsionator_uma; do
-        /opt/conda/bin/mamba run -n "$env" pip cache purge 2>/dev/null || true
+        /opt/conda/bin/conda run --no-capture-output -n "$env" pip cache purge 2>/dev/null || true
     done
 
 %test
